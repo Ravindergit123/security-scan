@@ -2,6 +2,7 @@ trigger: none
 pool: security
 variables:
 - group: Infracost_API_KEY
+  
 stages:
   - stage: 
     displayName: tool
@@ -48,3 +49,16 @@ stages:
           inputs:
             version: 'v1.26.0'
             dir: '$(System.DefaultWorkingDirectory)'
+        - task: PowerShell@2
+          displayName: Checkov Scan (Soft Fail)
+          continueOnError: true
+          inputs:
+            targetType: 'inline'
+            script: |
+              python -m pip install --upgrade pip
+              pip install checkov
+
+              checkov `
+                -d $(System.DefaultWorkingDirectory) `
+                -o cli `
+                --soft-fail
