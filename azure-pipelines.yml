@@ -1,0 +1,21 @@
+trigger: none
+pool: security
+stages:
+  - stage: 
+    displayName: tool
+    jobs:
+      - job: 
+        steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/security-scan'
+            backendServiceArm: 'security'
+            backendAzureRmResourceGroupName: 'ravinder_storage'
+            backendAzureRmStorageAccountName: 'ravinderstg'
+            backendAzureRmContainerName: 'ravindercon'
+            backendAzureRmKey: 'ravi.tfstate'
