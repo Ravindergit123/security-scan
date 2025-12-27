@@ -13,7 +13,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/security-scan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/security-scan/module'
             backendServiceArm: 'security'
             backendAzureRmResourceGroupName: 'ravinder_storage'
             backendAzureRmStorageAccountName: 'ravinderstg'
