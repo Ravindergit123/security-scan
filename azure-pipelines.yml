@@ -17,11 +17,17 @@ stages:
             provider: 'azurerm'
             command: 'init'
             workingDirectory: '$(System.DefaultWorkingDirectory)/module'
-            backendServiceArm: 'security'
-            backendAzureRmResourceGroupName: 'ravinder_storage'
-            backendAzureRmStorageAccountName: 'ravinderstg'
-            backendAzureRmContainerName: 'ravindercon'
-            backendAzureRmKey: 'ravi.tfstate'
+            # backendServiceArm: 'security'
+            # backendAzureRmResourceGroupName: 'ravinder_storage'
+            # backendAzureRmStorageAccountName: 'ravinderstg'
+            # backendAzureRmContainerName: 'ravindercon'
+            # backendAzureRmKey: 'ravi.tfstate'
+            backendServiceArm: '$(AZURE_SERVICE_CONNECTION)'
+            backendAzureRmResourceGroupName: '$(TF_BACKEND_RG)'
+            backendAzureRmStorageAccountName: '$(TF_BACKEND_STG)'
+            backendAzureRmContainerName: '$(TF_BACKEND_CONTAINER)'
+            backendAzureRmKey: '$(TF_BACKEND_KEY)'
+
         - task: PowerShell@2
           continueOnError: true
           displayName: Infra Cost Estimation
