@@ -49,16 +49,24 @@ stages:
           inputs:
             version: 'v1.26.0'
             dir: '$(System.DefaultWorkingDirectory)'
+        
+        - task: UsePythonVersion@0
+          displayName: Install Python
+          inputs:
+            versionSpec: '3.x'
+            addToPath: true
+
         - task: PowerShell@2
           displayName: Checkov Scan (Soft Fail)
           continueOnError: true
           inputs:
             targetType: 'inline'
             script: |
+              python --version
               python -m pip install --upgrade pip
               pip install checkov
 
               checkov `
-                -d $(System.DefaultWorkingDirectory) `
+                -d $(System.DefaultWorkingDirectory)/module `
                 -o cli `
                 --soft-fail
