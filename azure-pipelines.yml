@@ -31,7 +31,7 @@ stages:
               tar -xvf infracost.tar.gz
               .\infracost.exe --version
               $env:INFRACOST_API_KEY = "$(INFRACOST_API_KEY)"
-              .\infracost.exe breakdown --path $(working-path) --format table
+              .\infracost.exe breakdown --path '$(System.DefaultWorkingDirectory)/module' --format table
         - task: TerraformTask@5
           inputs:
             provider: 'azurerm'
