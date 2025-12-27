@@ -1,5 +1,7 @@
 trigger: none
 pool: security
+variables:
+- group: Infracost_API_KEY
 stages:
   - stage: 
     displayName: tool
