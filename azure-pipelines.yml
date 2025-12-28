@@ -76,3 +76,29 @@ stages:
                 -d $(System.DefaultWorkingDirectory)/module `
                 -o cli `
                 --soft-fail
+      - job: lint
+        displayName: Lint
+        steps:
+
+          - task: PowerShell@2
+            displayName: Lint JavaScript (Biome)
+            continueOnError: true
+            inputs:
+              targetType: 'inline'
+              script: |
+                Invoke-WebRequest `
+                  -Uri "https://github.com/biomejs/biome/releases/download/cli/biome-windows-x64.exe" `
+                  -OutFile "$(Agent.ToolsDirectory)/biome.exe"
+
+                $(Agent.ToolsDirectory)/biome.exe lint `
+                  $(System.DefaultWorkingDirectory)/src
+
+          - task: PowerShell@2
+            displayName: Lint CSS (Stylelint)
+            continueOnError: true
+            inputs:
+              targetType: 'inline'
+              script: |
+                npm install -g stylelint stylelint-config-standard
+                stylelint "**/*.css"
+            
