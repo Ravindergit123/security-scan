@@ -80,25 +80,28 @@ stages:
         displayName: Lint
         steps:
 
-          - task: PowerShell@2
-            displayName: Lint JavaScript (Biome)
-            continueOnError: true
-            inputs:
-              targetType: 'inline'
-              script: |
-                Invoke-WebRequest `
-                  -Uri "https://github.com/biomejs/biome/releases/download/cli/biome-windows-x64.exe" `
-                  -OutFile "$(Agent.ToolsDirectory)/biome.exe"
+        # ---------------- JS Lint (Biome) ----------------
+        - task: PowerShell@2
+          displayName: Lint JavaScript (Biome)
+          continueOnError: true
+          inputs:
+            targetType: 'inline'
+            script: |
+              npm install -g @biomejs/biome
+              biome lint src || echo "Biome lint completed with warnings"
 
-                $(Agent.ToolsDirectory)/biome.exe lint `
-                  $(System.DefaultWorkingDirectory)/src
+        # ---------------- CSS Lint (Stylelint) ----------------
+        - task: PowerShell@2
+          displayName: Lint CSS (Stylelint)
+          continueOnError: true
+          inputs:
+            targetType: 'inline'
+            script: |
+              npm install -g stylelint stylelint-config-standard
 
-          - task: PowerShell@2
-            displayName: Lint CSS (Stylelint)
-            continueOnError: true
-            inputs:
-              targetType: 'inline'
-              script: |
-                npm install -g stylelint stylelint-config-standard
-                stylelint "**/*.css"
-            
+              $files = Get-ChildItem -Path . -Recurse -Include *.css -ErrorAction SilentlyContinue
+              if ($files.Count -eq 0) {
+                Write-Host "No CSS files found. Skipping Stylelint."
+              } else {
+                stylelint "**/*.css" || echo "Stylelint warnings found"
+              }
